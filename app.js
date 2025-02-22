@@ -8,6 +8,7 @@ const db = new Database();
 const cargoRoute = require("./src/routes/cargo.route");
 const dependenciaRoute = require("./src/routes/dependencia.route");
 const funcionarioRoute = require("./src/routes/funcionario.route");
+const usuarioRoute = require("./src/routes/usuario.route");
 db.connect();
 
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(cors());
 app.use("/api", cargoRoute);
 app.use("/api", dependenciaRoute);
 app.use("/api", funcionarioRoute);
+app.use("/api", usuarioRoute);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
