@@ -3,6 +3,7 @@ const Database = require("../../config/db");
 const db = new Database();
 const Dependencia = require("./dependencia.model");
 const Cargo = require("./cargo.model");
+const Usuario = require("./usuario.model");
 
 class Funcionario extends Model {}
 
