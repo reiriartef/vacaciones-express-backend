@@ -32,6 +32,7 @@ Cargo.init(
 Cargo.belongsTo(TipoEmpleado, {
   foreignKey: "tipo_empleado",
   targetKey: "id",
+  as: "tipoEmpleado",
 });
 
 module.exports = Cargo;

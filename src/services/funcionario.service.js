@@ -34,11 +34,22 @@ class FuncionarioService {
     try {
       const funcionarios = await Funcionario.findAll({
         include: [
-          { model: Dependencia, attributes: { exclude: ["id"] } },
+          {
+            model: Dependencia,
+            as: "dependencia",
+            attributes: { exclude: ["id"] },
+          },
           {
             model: Cargo,
+            as: "cargo",
             attributes: { exclude: ["id", "tipo_empleado"] },
-            include: [{ model: TipoEmpleado, attributes: { exclude: ["id"] } }],
+            include: [
+              {
+                model: TipoEmpleado,
+                as: "tipoEmpleado",
+                attributes: { exclude: ["id"] },
+              },
+            ],
           },
         ],
         attributes: { exclude: ["id_dependencia", "id_cargo"] },
@@ -53,11 +64,22 @@ class FuncionarioService {
     try {
       const funcionario = await Funcionario.findByPk(ci, {
         include: [
-          { model: Dependencia, attributes: { exclude: ["id"] } },
+          {
+            model: Dependencia,
+            as: "dependencia",
+            attributes: { exclude: ["id"] },
+          },
           {
             model: Cargo,
+            as: "cargo",
             attributes: { exclude: ["id", "tipo_empleado"] },
-            include: [{ model: TipoEmpleado, attributes: { exclude: ["id"] } }],
+            include: [
+              {
+                model: TipoEmpleado,
+                as: "tipoEmpleado",
+                attributes: { exclude: ["id"] },
+              },
+            ],
           },
         ],
         attributes: { exclude: ["id_dependencia", "id_cargo"] },
@@ -80,7 +102,6 @@ class FuncionarioService {
     fecha_ingreso
   ) {
     try {
-      console.log(id);
       const funcionario = await Funcionario.update(
         {
           cedula,

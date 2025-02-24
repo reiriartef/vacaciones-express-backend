@@ -12,18 +12,33 @@ class UsuarioService {
       throw new Error("El funcionario no existe");
     }
 
-    const userName =
+    let userName =
       funcionario.primer_apellido.slice(0, 4).toLowerCase() +
       funcionario.primer_nombre.slice(0, 3).toLowerCase() +
       (funcionario.segundo_nombre
         ? funcionario.segundo_nombre.slice(0, 1).toLowerCase()
         : "x");
 
-    const usuario = await Usuario.findOne({
+    let usuario = await Usuario.findOne({
       where: { nombre_usuario: userName },
     });
+
+    if (usuario && usuario.funcionario == cedula) {
+      throw new Error("El funcionario ya posee usuario.");
+    }
+
+    // Si el nombre de usuario ya existe, agregar un sufijo incremental
     if (usuario) {
-      throw new Error("El usuario ya existe");
+      let suffix = 1;
+      let newUserName;
+      do {
+        newUserName = `${userName}0${suffix}`;
+        usuario = await Usuario.findOne({
+          where: { nombre_usuario: newUserName },
+        });
+        suffix++;
+      } while (usuario);
+      userName = newUserName;
     }
 
     const salt = await bcrypt.genSalt(10);

@@ -3,7 +3,6 @@ const Database = require("../../config/db");
 const db = new Database();
 const Dependencia = require("./dependencia.model");
 const Cargo = require("./cargo.model");
-const Usuario = require("./usuario.model");
 
 class Funcionario extends Model {}
 
@@ -59,11 +58,13 @@ Funcionario.init(
 Funcionario.belongsTo(Dependencia, {
   foreignKey: "id_dependencia",
   targetKey: "id",
+  as: "dependencia",
 });
 
 Funcionario.belongsTo(Cargo, {
   foreignKey: "id_cargo",
   targetKey: "id",
+  as: "cargo",
 });
 
 module.exports = Funcionario;

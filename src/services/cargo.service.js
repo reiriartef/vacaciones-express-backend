@@ -19,6 +19,7 @@ class CargoService {
         include: [
           {
             model: TipoEmpleado,
+            as: "tipoEmpleado",
             attributes: { exclude: ["id"] },
           },
         ],

@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS usuario (id SERIAL PRIMARY KEY,
 									estado estado_usuario NOT NULL,
 									FOREIGN KEY (funcionario) REFERENCES funcionario(cedula));
 								  
-CREATE TYPE estado_vacaciones AS ENUM('APROBADA', 'PENDIENTE', 'DISFRUTADA', 'SOLICITADA');
+CREATE TYPE estado_vacaciones AS ENUM('SOLICITADA', 'APROBADA', 'DISFRUTADA', 'REPROGRAMADA');
 
 CREATE TABLE IF NOT EXISTS vacaciones (id SERIAL PRIMARY KEY,
 									   funcionario INT NOT NULL,
@@ -36,6 +36,8 @@ CREATE TABLE IF NOT EXISTS vacaciones (id SERIAL PRIMARY KEY,
 									  dias_disfrutar INT NOT NULL,
 									  estatus estado_vacaciones NOT NULL,
 									  aprobado_por INT,
+									  observaciones TEXT,
+									  fecha_finalizacion DATE NOT NULL
 									  FOREIGN KEY (funcionario) REFERENCES funcionario(cedula),
 									  FOREIGN KEY (aprobado_por) REFERENCES usuario(id)
 									  );
