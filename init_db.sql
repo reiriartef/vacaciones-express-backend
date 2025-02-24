@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS vacaciones (id SERIAL PRIMARY KEY,
 									  estatus estado_vacaciones NOT NULL,
 									  aprobado_por INT,
 									  observaciones TEXT,
-									  fecha_finalizacion DATE NOT NULL
+									  fecha_finalizacion DATE NOT NULL,
 									  FOREIGN KEY (funcionario) REFERENCES funcionario(cedula),
 									  FOREIGN KEY (aprobado_por) REFERENCES usuario(id)
 									  );
