@@ -10,8 +10,11 @@ const {
   calcularFechaFinalizacion,
   calcularFechaReintegro,
 } = require("../helpers/diasADisfrutar");
+const Feriados = require("../models/feriados.model");
 class VacacionesService {
   async solicitarVacaciones(cedula, fecha_salida, año) {
+    const feriados = await Feriados.findAll();
+    const feriadosArray = feriados.map((feriado) => new Date(feriado.fecha));
     try {
       if (!cedula || !fecha_salida || !año) {
         throw new Error("Cédula, fecha de salida y año son requeridos");
@@ -43,7 +46,15 @@ class VacacionesService {
         throw new Error("Funcionario inválido");
       }
 
-      const vacaciones = await Vacaciones.findOne({ where: { año } });
+      if (año < funcionario.fecha_ingreso.getFullYear()) {
+        throw new Error(
+          "El año de vacaciones no puede ser menor al año de ingreso del funcionario"
+        );
+      }
+
+      const vacaciones = await Vacaciones.findOne({
+        where: { año, funcionario: cedula },
+      });
       if (vacaciones) {
         throw new Error(
           vacaciones.estatus == "SOLICITADA"
@@ -61,12 +72,13 @@ class VacacionesService {
       const fechaFinalizacion = await calcularFechaFinalizacion(
         fecha_salida,
         diasVacaciones,
-        [new Date("2025-05-01")]
+        feriadosArray
       );
 
-      const fechaReintegro = await calcularFechaReintegro(fechaFinalizacion, [
-        new Date("2025-05-01"),
-      ]);
+      const fechaReintegro = await calcularFechaReintegro(
+        fechaFinalizacion,
+        feriadosArray
+      );
       return await Vacaciones.create({
         funcionario: cedula,
         fecha_salida,

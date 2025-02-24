@@ -12,6 +12,7 @@ const funcionarioRoute = require("./src/routes/funcionario.route");
 const usuarioRoute = require("./src/routes/usuario.route");
 const authRoute = require("./src/routes/auth.route");
 const vacacionesRoute = require("./src/routes/vacaciones.route");
+const feriadosRoute = require("./src/routes/feriados.route");
 const authMiddleware = require("./src/middlewares/auth.middleware");
 
 db.connect();
@@ -25,6 +26,7 @@ app.use("/api", authMiddleware, dependenciaRoute);
 app.use("/api", authMiddleware, funcionarioRoute);
 app.use("/api", authMiddleware, usuarioRoute);
 app.use("/api", authMiddleware, vacacionesRoute);
+app.use("/api", authMiddleware, feriadosRoute);
 app.use("/auth", authRoute);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
