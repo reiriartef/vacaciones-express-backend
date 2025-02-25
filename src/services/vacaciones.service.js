@@ -46,7 +46,7 @@ class VacacionesService {
         throw new Error("Funcionario inválido");
       }
 
-      if (año < funcionario.fecha_ingreso.getFullYear()) {
+      if (año < new Date(funcionario.fecha_ingreso).getFullYear()) {
         throw new Error(
           "El año de vacaciones no puede ser menor al año de ingreso del funcionario"
         );
