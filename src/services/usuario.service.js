@@ -1,5 +1,8 @@
 const Usuario = require("../models/usuario.model");
 const Funcionario = require("../models/funcionario.model");
+const Dependencia = require("../models/dependencia.model");
+const Cargo = require("../models/cargo.model");
+const TipoEmpleado = require("../models/tipoEmpleado.model");
 const bcrypt = require("bcrypt");
 
 class UsuarioService {
@@ -52,6 +55,39 @@ class UsuarioService {
 
   async getUsers() {
     return await Usuario.findAll({
+      include: [
+        {
+          model: Funcionario,
+          as: "funcionarioDetails",
+          attributes: [
+            "cedula",
+            "primer_nombre",
+            "segundo_nombre",
+            "primer_apellido",
+            "segundo_apellido",
+            "fecha_ingreso",
+          ],
+          include: [
+            {
+              model: Dependencia,
+              as: "dependencia",
+              attributes: ["nombre"],
+            },
+            {
+              model: Cargo,
+              as: "cargo",
+              attributes: ["nombre"],
+              include: [
+                {
+                  model: TipoEmpleado,
+                  as: "tipoEmpleado",
+                  attributes: ["descripcion"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
       attributes: { exclude: ["contraseña", "id"] },
     });
   }

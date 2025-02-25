@@ -32,10 +32,15 @@ Usuario.init(
   },
   {
     sequelize: db.getSequelize(),
-    modelName: "usuario",
+    modelName: "Usuario",
     tableName: "usuario",
     timestamps: false,
   }
 );
+
+Usuario.belongsTo(Funcionario, {
+  foreignKey: "funcionario",
+  as: "funcionarioDetails",
+});
 
 module.exports = Usuario;

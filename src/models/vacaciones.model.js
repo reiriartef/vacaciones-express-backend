@@ -1,5 +1,7 @@
 const { DataTypes, Model } = require("sequelize");
 const Database = require("../../config/db");
+const Funcionario = require("./funcionario.model");
+const Usuario = require("./usuario.model");
 const db = new Database();
 
 class Vacaciones extends Model {}
@@ -56,5 +58,15 @@ Vacaciones.init(
     timestamps: false,
   }
 );
+
+Vacaciones.belongsTo(Funcionario, {
+  foreignKey: "funcionario",
+  as: "funcionarioDetails",
+});
+
+Vacaciones.belongsTo(Usuario, {
+  foreignKey: "aprobado_por",
+  as: "usuarioAprobador",
+});
 
 module.exports = Vacaciones;

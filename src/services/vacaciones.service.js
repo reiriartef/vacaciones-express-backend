@@ -9,6 +9,8 @@ const {
 } = require("../helpers/diasADisfrutar");
 const Feriados = require("../models/feriados.model");
 const jwt = require("jsonwebtoken");
+const Usuario = require("../models/usuario.model");
+
 class VacacionesService {
   async solicitarVacaciones(cedula, fecha_salida, año) {
     const feriados = await Feriados.findAll();
@@ -67,16 +69,6 @@ class VacacionesService {
         funcionario.fecha_ingreso,
         año
       );
-      /* const fechaFinalizacion = await calcularFechaFinalizacion(
-        fecha_salida,
-        diasVacaciones,
-        feriadosArray
-      );
-
-      const fechaReintegro = await calcularFechaReintegro(
-        fechaFinalizacion,
-        feriadosArray
-      ); */
       const { fechaFinalizacion, fechaReinicio } =
         await calcularFechaFinalizacionVacaciones(
           diasVacaciones,
@@ -99,7 +91,61 @@ class VacacionesService {
 
   async listarVacaciones() {
     try {
-      const vacaciones = await Vacaciones.findAll();
+      const vacaciones = await Vacaciones.findAll({
+        include: [
+          {
+            model: Funcionario,
+            as: "funcionarioDetails",
+            attributes: [
+              "cedula",
+              "primer_nombre",
+              "segundo_nombre",
+              "primer_apellido",
+              "segundo_apellido",
+              "fecha_ingreso",
+            ],
+            include: [
+              {
+                model: Dependencia,
+                as: "dependencia",
+                attributes: ["nombre"],
+              },
+              {
+                model: Cargo,
+                as: "cargo",
+                attributes: ["nombre"],
+                include: [
+                  {
+                    model: TipoEmpleado,
+                    as: "tipoEmpleado",
+                    attributes: ["descripcion"],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            model: Usuario,
+            as: "usuarioAprobador",
+            attributes: ["nombre_usuario"],
+            include: [
+              {
+                model: Funcionario,
+                as: "funcionarioDetails",
+                attributes: [
+                  "cedula",
+                  "primer_nombre",
+                  "segundo_nombre",
+                  "primer_apellido",
+                  "segundo_apellido",
+                  "fecha_ingreso",
+                ],
+              },
+            ],
+          },
+        ],
+        attributes: { exclude: ["funcionario", "aprobado_por"] },
+      });
       return vacaciones;
     } catch (error) {
       throw new Error(error);
