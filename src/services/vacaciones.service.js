@@ -4,17 +4,15 @@ const Cargo = require("../models/cargo.model");
 const Dependencia = require("../models/dependencia.model");
 const TipoEmpleado = require("../models/tipoEmpleado.model");
 const {
-  esDiaHabil,
-  esFeriado,
+  calcularFechaFinalizacionVacaciones,
   calcularDias,
-  calcularFechaFinalizacion,
-  calcularFechaReintegro,
 } = require("../helpers/diasADisfrutar");
 const Feriados = require("../models/feriados.model");
+const jwt = require("jsonwebtoken");
 class VacacionesService {
   async solicitarVacaciones(cedula, fecha_salida, año) {
     const feriados = await Feriados.findAll();
-    const feriadosArray = feriados.map((feriado) => new Date(feriado.fecha));
+    const feriadosArray = feriados.map((feriado) => feriado.fecha);
     try {
       if (!cedula || !fecha_salida || !año) {
         throw new Error("Cédula, fecha de salida y año son requeridos");
@@ -69,7 +67,7 @@ class VacacionesService {
         funcionario.fecha_ingreso,
         año
       );
-      const fechaFinalizacion = await calcularFechaFinalizacion(
+      /* const fechaFinalizacion = await calcularFechaFinalizacion(
         fecha_salida,
         diasVacaciones,
         feriadosArray
@@ -78,11 +76,18 @@ class VacacionesService {
       const fechaReintegro = await calcularFechaReintegro(
         fechaFinalizacion,
         feriadosArray
-      );
+      ); */
+      const { fechaFinalizacion, fechaReinicio } =
+        await calcularFechaFinalizacionVacaciones(
+          diasVacaciones,
+          fecha_salida,
+          feriadosArray
+        );
+
       return await Vacaciones.create({
         funcionario: cedula,
         fecha_salida,
-        fecha_reincorporacion: fechaReintegro,
+        fecha_reincorporacion: fechaReinicio,
         año,
         dias_disfrutar: diasVacaciones,
         fecha_finalizacion: fechaFinalizacion,
@@ -96,6 +101,29 @@ class VacacionesService {
     try {
       const vacaciones = await Vacaciones.findAll();
       return vacaciones;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async cambiarEstadoVacaciones(id, token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        throw new Error("Token inválido");
+      }
+      const userId = decoded.id;
+      const vacaciones = await Vacaciones.findByPk(id);
+      if (!vacaciones) {
+        throw new Error("Vacaciones no encontradas");
+      }
+      if (vacaciones.estatus === "SOLICITADA") {
+        vacaciones.estatus = "APROBADA";
+        vacaciones.aprobado_por = userId;
+      } else {
+        vacaciones.estatus = "DISFRUTADA";
+      }
+      return await vacaciones.save();
     } catch (error) {
       throw new Error(error);
     }

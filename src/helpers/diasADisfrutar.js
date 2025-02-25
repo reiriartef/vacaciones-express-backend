@@ -94,10 +94,55 @@ const calcularFechaReintegro = (fechaFinalizacion, feriados) => {
   return fechaReintegro.toISOString().split("T")[0];
 };
 
+const calcularFechaFinalizacionVacaciones = (
+  diasHabiles,
+  fechaInicio,
+  diasFeriados
+) => {
+  const feriados = new Set(diasFeriados.map((d) => new Date(d).toDateString()));
+  let diasContados = 0;
+  let fechaFinal = new Date(fechaInicio);
+
+  while (diasContados < diasHabiles) {
+    fechaFinal.setDate(fechaFinal.getDate() + 1);
+    const diaSemana = fechaFinal.getDay();
+    const fechaStr = fechaFinal.toDateString();
+
+    // Ignorar sábados, domingos y feriados
+    if (diaSemana !== 6 && diaSemana !== 0 && !feriados.has(fechaStr)) {
+      diasContados++;
+    }
+  }
+
+  // Asegurarse de que la fecha final es un día hábil
+  while (
+    fechaFinal.getDay() === 6 ||
+    fechaFinal.getDay() === 0 ||
+    feriados.has(fechaFinal.toDateString())
+  ) {
+    fechaFinal.setDate(fechaFinal.getDate() + 1);
+  }
+
+  // Reducir 16 horas para obtener la fecha correcta
+  fechaFinal.setHours(fechaFinal.getHours() - 16);
+
+  // Buscar el siguiente día hábil
+  let fechaReinicio = new Date(fechaFinal);
+  do {
+    fechaReinicio.setDate(fechaReinicio.getDate() + 1);
+  } while (
+    fechaReinicio.getDay() === 6 ||
+    fechaReinicio.getDay() === 0 ||
+    feriados.has(fechaReinicio.toDateString())
+  );
+
+  return {
+    fechaFinalizacion: fechaFinal.toISOString().split("T")[0],
+    fechaReinicio: fechaReinicio.toISOString().split("T")[0],
+  };
+};
+
 module.exports = {
-  esDiaHabil,
-  esFeriado,
+  calcularFechaFinalizacionVacaciones,
   calcularDias,
-  calcularFechaFinalizacion,
-  calcularFechaReintegro,
 };
