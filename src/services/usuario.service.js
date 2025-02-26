@@ -91,6 +91,45 @@ class UsuarioService {
       attributes: { exclude: ["contraseña", "id"] },
     });
   }
+
+  async getUserById(id) {
+    return await Usuario.findByPk(id, {
+      include: [
+        {
+          model: Funcionario,
+          as: "funcionarioDetails",
+          attributes: [
+            "cedula",
+            "primer_nombre",
+            "segundo_nombre",
+            "primer_apellido",
+            "segundo_apellido",
+            "fecha_ingreso",
+          ],
+          include: [
+            {
+              model: Dependencia,
+              as: "dependencia",
+              attributes: ["nombre"],
+            },
+            {
+              model: Cargo,
+              as: "cargo",
+              attributes: ["nombre"],
+              include: [
+                {
+                  model: TipoEmpleado,
+                  as: "tipoEmpleado",
+                  attributes: ["descripcion"],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      attributes: { exclude: ["contraseña", "id"] },
+    });
+  }
 }
 
 module.exports = UsuarioService;

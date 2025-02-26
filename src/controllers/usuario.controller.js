@@ -20,6 +20,16 @@ class UsuarioController {
       res.status(400).json({ message: error.message });
     }
   }
+
+  async getUserById(req, res) {
+    try {
+      const { id } = req.params;
+      const user = await usuarioService.getUserById(id);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }
 }
 
 module.exports = UsuarioController;
