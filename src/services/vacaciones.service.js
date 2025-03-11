@@ -64,11 +64,20 @@ class VacacionesService {
             : "Ya se ha generado un registro de vacaciones para este año la misma ha sido aprobada y está siendo disfrutada por el funcionario"
         );
       }
-      const diasVacaciones = await calcularDias(
-        funcionario.cargo.tipoEmpleado.descripcion,
-        funcionario.fecha_ingreso,
-        año
-      );
+      let diasVacaciones;
+      if (funcionario.fecha_ingreso != funcionario.fecha_prima) {
+        diasVacaciones = await calcularDias(
+          funcionario.cargo.tipoEmpleado.descripcion,
+          funcionario.fecha_prima,
+          año
+        );
+      } else {
+        diasVacaciones = await calcularDias(
+          funcionario.cargo.tipoEmpleado.descripcion,
+          funcionario.fecha_ingreso,
+          año
+        );
+      }
       const { fechaFinalizacion, fechaReinicio } =
         await calcularFechaFinalizacionVacaciones(
           diasVacaciones,

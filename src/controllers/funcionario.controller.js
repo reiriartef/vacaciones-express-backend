@@ -13,6 +13,7 @@ class FuncionarioController {
         id_dependencia,
         id_cargo,
         fecha_ingreso,
+        fecha_prima,
       } = req.body;
       const newFuncionario = await funcionarioService.createFuncionario(
         cedula,
@@ -22,7 +23,8 @@ class FuncionarioController {
         segundo_apellido,
         id_dependencia,
         id_cargo,
-        fecha_ingreso
+        fecha_ingreso,
+        fecha_prima
       );
       res.status(201).json(newFuncionario);
     } catch (error) {

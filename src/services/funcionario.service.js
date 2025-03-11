@@ -2,6 +2,7 @@ const Funcionario = require("../models/funcionario.model");
 const Dependencia = require("../models/dependencia.model");
 const Cargo = require("../models/cargo.model");
 const TipoEmpleado = require("../models/tipoEmpleado.model");
+const Usuario = require("../models/usuario.model");
 class FuncionarioService {
   async createFuncionario(
     cedula,
@@ -11,7 +12,8 @@ class FuncionarioService {
     segundo_apellido,
     id_dependencia,
     id_cargo,
-    fecha_ingreso
+    fecha_ingreso,
+    fecha_prima
   ) {
     try {
       const newFuncionario = await Funcionario.create({
@@ -23,6 +25,7 @@ class FuncionarioService {
         id_dependencia,
         id_cargo,
         fecha_ingreso,
+        fecha_prima,
       });
       return newFuncionario;
     } catch (error) {
@@ -50,6 +53,11 @@ class FuncionarioService {
                 attributes: { exclude: ["id"] },
               },
             ],
+          },
+          {
+            model: Usuario,
+            as: "usuarioDetails",
+            attributes: { exclude: ["id", "contraseña"] },
           },
         ],
         attributes: { exclude: ["id_dependencia", "id_cargo"] },

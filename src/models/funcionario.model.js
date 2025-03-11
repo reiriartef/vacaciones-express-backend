@@ -46,6 +46,10 @@ Funcionario.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    fecha_prima: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   },
   {
     sequelize: db.getSequelize(),

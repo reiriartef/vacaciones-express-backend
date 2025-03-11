@@ -29,6 +29,10 @@ Usuario.init(
       type: DataTypes.STRING,
       defaultValue: "ACTIVO",
     },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     sequelize: db.getSequelize(),
@@ -41,6 +45,11 @@ Usuario.init(
 Usuario.belongsTo(Funcionario, {
   foreignKey: "funcionario",
   as: "funcionarioDetails",
+});
+
+Funcionario.hasOne(Usuario, {
+  foreignKey: "funcionario",
+  as: "usuarioDetails",
 });
 
 module.exports = Usuario;

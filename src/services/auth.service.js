@@ -54,7 +54,7 @@ class AuthService {
           apellido: usuario.funcionarioDetails.primer_apellido,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "2h" }
       );
       return token;
     } catch (error) {

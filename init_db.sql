@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS funcionario (id SERIAL,
 									 id_dependencia INT NOT NULL,
 									 id_cargo INT NOT NULL,
 									 fecha_ingreso DATE NOT NULL,
+									 fecha_prima DATE NOT NULL,
 									 FOREIGN KEY (id_dependencia) REFERENCES dependencia(id),
 									 FOREIGN KEY (id_cargo) REFERENCES cargo(id)
 									);
@@ -24,6 +25,7 @@ CREATE TABLE IF NOT EXISTS usuario (id SERIAL PRIMARY KEY,
 									nombre_usuario varchar(10) UNIQUE NOT NULL,
 									contraseña varchar(255) NOT NULL,
 									estado estado_usuario NOT NULL,
+									isAdmin BOOLEAN NOT NULL,
 									FOREIGN KEY (funcionario) REFERENCES funcionario(cedula));
 								  
 CREATE TYPE estado_vacaciones AS ENUM('SOLICITADA', 'APROBADA', 'DISFRUTADA', 'REPROGRAMADA');
