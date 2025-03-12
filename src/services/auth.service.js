@@ -45,6 +45,7 @@ class AuthService {
         contraseña,
         usuario.contraseña
       );
+      console.log(usuario);
       if (!contraseñaValida) throw new Error("Contraseña inválida");
       const token = jwt.sign(
         {
@@ -52,9 +53,10 @@ class AuthService {
           id: usuario.id,
           nombre: usuario.funcionarioDetails.primer_nombre,
           apellido: usuario.funcionarioDetails.primer_apellido,
+          isAdmin: usuario.isAdmin,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "2h" }
+        { expiresIn: "30m" }
       );
       return token;
     } catch (error) {

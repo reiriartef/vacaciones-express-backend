@@ -4,6 +4,7 @@ const Dependencia = require("../models/dependencia.model");
 const Cargo = require("../models/cargo.model");
 const TipoEmpleado = require("../models/tipoEmpleado.model");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 class UsuarioService {
   async createUser(cedula) {
@@ -129,6 +130,21 @@ class UsuarioService {
       ],
       attributes: { exclude: ["contraseña", "id"] },
     });
+  }
+
+  async changePassword(newPassword, token) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      throw new Error("Token inválido");
+    }
+
+    const userId = decoded.id;
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(newPassword, salt);
+    return await Usuario.update(
+      { contraseña: password },
+      { where: { id: userId } }
+    );
   }
 }
 

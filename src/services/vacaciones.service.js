@@ -154,6 +154,7 @@ class VacacionesService {
           },
         ],
         attributes: { exclude: ["funcionario", "aprobado_por"] },
+        order: [["id", "DESC"]],
       });
       return vacaciones;
     } catch (error) {
@@ -178,6 +179,7 @@ class VacacionesService {
       } else {
         vacaciones.estatus = "DISFRUTADA";
       }
+
       return await vacaciones.save();
     } catch (error) {
       throw new Error(error);
