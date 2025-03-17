@@ -63,6 +63,7 @@ class FuncionarioController {
         id_dependencia,
         id_cargo,
         fecha_ingreso,
+        fecha_prima,
       } = req.body;
       const updatedFuncionario = await funcionarioService.updateFuncionario(
         id,
@@ -73,7 +74,8 @@ class FuncionarioController {
         segundo_apellido,
         id_dependencia,
         id_cargo,
-        fecha_ingreso
+        fecha_ingreso,
+        fecha_prima
       );
       res.status(200).json(updatedFuncionario);
     } catch (error) {

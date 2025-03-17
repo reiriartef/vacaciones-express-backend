@@ -56,7 +56,7 @@ class AuthService {
           isAdmin: usuario.isAdmin,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "30m" }
+        { expiresIn: "1h" }
       );
       return token;
     } catch (error) {

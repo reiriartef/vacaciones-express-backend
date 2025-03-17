@@ -4,11 +4,12 @@ const vacacionesService = new VacacionesService();
 class VacacionesController {
   async solicitarVacaciones(req, res) {
     try {
-      const { cedula, fecha_salida, año } = req.body;
+      const { cedula, fecha_salida, año, observaciones } = req.body;
       const vacaciones = await vacacionesService.solicitarVacaciones(
         cedula,
         fecha_salida,
-        año
+        año,
+        observaciones
       );
       return res.status(200).json(vacaciones);
     } catch (error) {

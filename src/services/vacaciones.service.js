@@ -12,7 +12,7 @@ const jwt = require("jsonwebtoken");
 const Usuario = require("../models/usuario.model");
 
 class VacacionesService {
-  async solicitarVacaciones(cedula, fecha_salida, año) {
+  async solicitarVacaciones(cedula, fecha_salida, año, observaciones) {
     const feriados = await Feriados.findAll();
     const feriadosArray = feriados.map((feriado) => feriado.fecha);
     try {
@@ -92,6 +92,7 @@ class VacacionesService {
         año,
         dias_disfrutar: diasVacaciones,
         fecha_finalizacion: fechaFinalizacion,
+        observaciones,
       });
     } catch (error) {
       throw new Error(error);

@@ -107,7 +107,8 @@ class FuncionarioService {
     segundo_apellido,
     id_dependencia,
     id_cargo,
-    fecha_ingreso
+    fecha_ingreso,
+    fecha_prima
   ) {
     try {
       const funcionario = await Funcionario.update(
@@ -120,6 +121,7 @@ class FuncionarioService {
           id_dependencia,
           id_cargo,
           fecha_ingreso,
+          fecha_prima,
         },
         {
           where: {
